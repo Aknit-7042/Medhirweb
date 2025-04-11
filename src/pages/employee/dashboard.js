@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaCalendarAlt, FaUserCheck, FaClock } from "react-icons/fa"; // Removed FaUser since we won't need it
+import { FaCalendarAlt, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import HradminNavbar from "../../components/HradminNavbar";
 import Sidebar from "../../components/Sidebar";
@@ -12,6 +12,8 @@ const Overview = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [leaveBalance, setLeaveBalance] = useState(null);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+  const [showAddLeadForm, setShowAddLeadForm] = useState(false);
+  const [leadFormData, setLeadFormData] = useState({});
   const [balanceError, setBalanceError] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const { leaveHistory } = useSelector((state) => state.leaveReducer);
@@ -70,6 +72,17 @@ const Overview = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  const handleAddLeadClick = () => {
+    setShowAddLeadForm(true);
+  };
+
+  const handleFormChange = (e) => {
+    setLeadFormData({ ...leadFormData, [e.target.name]: e.target.value });
+  };
+  const handleFormClose = () => {
+    setShowAddLeadForm(false);
+  }
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -98,7 +111,7 @@ const Overview = () => {
           </div>
 
           {/* Cards Container */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Leave Balance Card */}
             <Link href="/employee/leaves">
               <div
@@ -133,6 +146,79 @@ const Overview = () => {
                 )}
               </div>
             </Link>
+            {/* Add Lead Card */}
+            <div
+              onClick={handleAddLeadClick}
+              className="p-8 bg-white shadow-lg rounded-xl flex flex-col justify-between items-start hover:shadow-2xl hover:scale-105 transform transition-all duration-300 cursor-pointer border border-gray-100"
+              style={{ height: "250px", width: "350px" }}
+            >
+              <div className="flex justify-between items-center w-full mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Add a Lead
+                </h2>
+                <div className="p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-full">
+                  <FaPlus className="text-green-600 text-2xl" />
+                </div>
+              </div>
+              <p className="text-gray-600">Click here to add a new lead.</p>
+            </div>
+            {/* Add Lead Form (Modal) */}
+            {showAddLeadForm && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-8 rounded-lg w-1/2">
+                <button className="absolute top-2 right-2 text-gray-600 hover:text-gray-800" onClick={handleFormClose}>
+                    &times;
+                  </button>
+                  <h2 className="text-2xl font-bold mb-6">Add New Lead</h2>
+                  <form>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        onChange={handleFormChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Contact Number
+                      </label>
+                      <input
+                        type="text"
+                        name="contactNumber"
+                        onChange={handleFormChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Email ID
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        onChange={handleFormChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                     <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Project Type
+                      </label>
+                      <input
+                        type="text"
+                        name="projectType"
+                        onChange={handleFormChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
