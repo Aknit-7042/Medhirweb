@@ -165,12 +165,10 @@ const Overview = () => {
             </div>
             {/* Add Lead Form (Modal) */}
             {showAddLeadForm && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-8 rounded-lg w-1/2">
-                <button className="absolute top-2 right-2 text-gray-600 hover:text-gray-800" onClick={handleFormClose}>
-                    &times;
-                  </button>
-                  <h2 className="text-2xl font-bold mb-6">Add New Lead</h2>
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
+                <div className="bg-white p-8 rounded-lg max-w-screen-md w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+                  <button className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-3xl" onClick={handleFormClose}>×</button>
+                  <h2 className="text-2xl font-bold mb-6 text-center">Add New Lead</h2>
                   <form>
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -196,19 +194,6 @@ const Overview = () => {
                     </div>
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Email ID
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        onChange={handleFormChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Email ID
-                      </label>
                       <input
                         type="email"
                         name="email"
