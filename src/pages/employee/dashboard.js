@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaCalendarAlt, FaPlus } from "react-icons/fa";
 import Link from "next/link";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import HradminNavbar from "../../components/HradminNavbar";
 import Sidebar from "../../components/Sidebar";
 import axios from "axios";
@@ -110,7 +111,7 @@ const Overview = () => {
             </h1>
           </div>
 
-          {/* Cards Container */}
+          {/* Cards Container */} 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Leave Balance Card */}
             <Link href="/employee/leaves">
@@ -173,9 +174,9 @@ const Overview = () => {
                   <form>
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Name
+                      Name
                       </label>
-                      <input
+                       <input
                         type="text"
                         name="name"
                         onChange={handleFormChange}
@@ -204,15 +205,46 @@ const Overview = () => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
                     </div>
-                     <div className="mb-4">
+                    <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Project Type
+                        Email ID
                       </label>
                       <input
-                        type="text"
-                        name="projectType"
+                        type="email"
+                        name="email"
                         onChange={handleFormChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Project Type
+                      </label>
+                      <Select name="projectType" onValueChange={(value) => handleFormChange({ target: { name: 'projectType', value } })}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a project type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="2BHK Flat">2BHK Flat</SelectItem>
+                          <SelectItem value="3BHK Flat">3BHK Flat</SelectItem>
+                          <SelectItem value="4BHK Flat">4BHK Flat</SelectItem>
+                          <SelectItem value="2BHK Villa">2BHK Villa</SelectItem>
+                          <SelectItem value="3BHK Villa">3BHK Villa</SelectItem>
+                          <SelectItem value="4BHK Villa">4BHK Villa</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">Project Address</label>
+                      <input type="text" name="projectAddress" onChange={handleFormChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    </div>
+
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Expected Amount
+                      </label>
+                      <input
+                        type="number" name="expectedAmount" onChange={handleFormChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
                     </div>
                   </form>
