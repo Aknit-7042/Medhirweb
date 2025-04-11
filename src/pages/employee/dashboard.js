@@ -170,24 +170,23 @@ const Overview = () => {
                   <button className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-3xl" onClick={handleFormClose}>×</button>
                   <h2 className="text-2xl font-bold mb-6 text-center">Add New Lead</h2>
                   <form>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Name
-                      </label>
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
                        <input
                         type="text"
                         name="name"
+                        id="name"
                         onChange={handleFormChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Contact Number
-                      </label>
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">Contact Number</label>
                       <input
                         type="text"
                         name="contactNumber"
+                        id="contactNumber"
                         onChange={handleFormChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
@@ -195,35 +194,41 @@ const Overview = () => {
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
                       <input
+                        id="email"
                         type="email"
                         name="email"
                         onChange={handleFormChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
                     </div>
                     <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="projectType">
                         Project Type
                       </label>
-                      <Select name="projectType" onValueChange={(value) => handleFormChange({ target: { name: 'projectType', value } })}>
-                        <SelectTrigger className="w-full">
+                      <Select
+                      id="projectType"
+                        name="projectType"
+                        onValueChange={(value) => handleFormChange({ target: { name: 'projectType', value } })}
+                        defaultValue={leadFormData.projectType}
+                      >
+                        <SelectTrigger className="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                           <SelectValue placeholder="Select a project type" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="2BHK Flat">2BHK Flat</SelectItem>
-                          <SelectItem value="3BHK Flat">3BHK Flat</SelectItem>
-                          <SelectItem value="4BHK Flat">4BHK Flat</SelectItem>
-                          <SelectItem value="2BHK Villa">2BHK Villa</SelectItem>
-                          <SelectItem value="3BHK Villa">3BHK Villa</SelectItem>
-                          <SelectItem value="4BHK Villa">4BHK Villa</SelectItem>
+                        <SelectContent className="z-50">
+                        <SelectItem value="2BHK Flat">2BHK Flat</SelectItem>
+                        <SelectItem value="3BHK Flat">3BHK Flat</SelectItem>
+                        <SelectItem value="4BHK Flat">4BHK Flat</SelectItem>
+                        <SelectItem value="2BHK Villa">2BHK Villa</SelectItem>
+                        <SelectItem value="3BHK Villa">3BHK Villa</SelectItem>
+                        <SelectItem value="4BHK Villa">4BHK Villa</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">Project Address</label>
-                      <input type="text" name="projectAddress" onChange={handleFormChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="projectAddress">Project Address</label>
+                      <input id="projectAddress" type="text" name="projectAddress" onChange={handleFormChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                     </div>
-
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
                         Expected Amount
@@ -231,6 +236,12 @@ const Overview = () => {
                       <input
                         type="number" name="expectedAmount" onChange={handleFormChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
+                    </div>
+                    </div>
+                    <div className="mt-6">
+                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Submit
+                      </button>
                     </div>
                   </form>
                 </div>
