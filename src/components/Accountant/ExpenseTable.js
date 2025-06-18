@@ -187,26 +187,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
 
   // Column visibility state
   const [visibleColumns, setVisibleColumns] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(preferencesKey);
-      return saved ? JSON.parse(saved) : {
-        projectId: true,
-        clientName: true,
-        totalExpense: true,
-        budget: true,
-        paymentCount: true,
-        date: true,
-        description: true,
-        createdBy: true,
-        category: true,
-        vendorName: true,
-        amount: true,
-        status: true,
-        paymentProof: true,
-        expenseStatus: true,
-      };
-    }
-    return {
+    const defaultColumns = {
       projectId: true,
       clientName: true,
       totalExpense: true,
@@ -222,6 +203,16 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
       paymentProof: true,
       expenseStatus: true,
     };
+
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(preferencesKey);
+      if (saved) {
+        const savedColumns = JSON.parse(saved);
+        // Merge defaults with saved to ensure new columns are added for existing users
+        return { ...defaultColumns, ...savedColumns };
+      }
+    }
+    return defaultColumns;
   });
 
   // Save column preferences
