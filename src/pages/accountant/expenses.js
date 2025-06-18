@@ -139,9 +139,35 @@ const AccountantExpensesPage = () => {
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [statusFilter, setStatusFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Load user preferences from localStorage
+  const [userPreferences, setUserPreferences] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('accountantExpensePreferences');
+      return saved ? JSON.parse(saved) : { statusFilter: 'All', searchQuery: '' };
+    }
+    return { statusFilter: 'All', searchQuery: '' };
+  });
+
+  // Save user preferences to localStorage
+  const saveUserPreferences = (newPreferences) => {
+    setUserPreferences(newPreferences);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('accountantExpensePreferences', JSON.stringify(newPreferences));
+    }
+  };
+
+  // Initialize filters from user preferences
+  React.useEffect(() => {
+    setStatusFilter(userPreferences.statusFilter);
+    setSearchQuery(userPreferences.searchQuery);
+  }, []);
 
   const handleCreateExpense = () => {
     setEditingExpense(null);
@@ -156,8 +182,37 @@ const AccountantExpensesPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingExpense(null);
-  }
-  
+  };
+
+  const handleStatusFilterChange = (newStatus) => {
+    setStatusFilter(newStatus);
+    saveUserPreferences({ ...userPreferences, statusFilter: newStatus });
+  };
+
+  const handleSearchChange = (newQuery) => {
+    setSearchQuery(newQuery);
+    saveUserPreferences({ ...userPreferences, searchQuery: newQuery });
+  };
+
+  // Simulate loading state for demo
+  const simulateLoading = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to load expenses. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  // Show success message
+  const showSuccessMessage = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
   const filteredExpenses = useMemo(() => {
     return mockExpenses.filter(expense => {
       const statusMatch = statusFilter === 'All' || (statusFilter === 'Pending' ? expense.status === 'Yet to be Paid' : expense.status === statusFilter);
@@ -188,7 +243,7 @@ const AccountantExpensesPage = () => {
         <div style={styles.toolbar}>
           <div style={styles.filters}>
             {['All', 'Paid', 'Pending', 'Rejected'].map(status => (
-              <button key={status} style={styles.filterButton(statusFilter === status)} onClick={() => setStatusFilter(status)}>
+              <button key={status} style={styles.filterButton(statusFilter === status)} onClick={() => handleStatusFilterChange(status)}>
                 {status}
               </button>
             ))}
@@ -200,12 +255,46 @@ const AccountantExpensesPage = () => {
               placeholder="Search by ID, project, client..."
               style={styles.searchInput}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
         </div>
-        
-        <AccountantExpenseTable expenses={filteredExpenses} onEdit={handleEditExpense} />
+
+        {/* Success Message */}
+        {successMessage && (
+          <div style={{
+            background: '#dcfce7',
+            color: '#166534',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            marginBottom: '16px',
+            border: '1px solid #bbf7d0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <span style={{ fontWeight: 500 }}>{successMessage}</span>
+            <button 
+              onClick={() => setSuccessMessage('')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#166534',
+                cursor: 'pointer',
+                fontSize: '1.2rem'
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        <AccountantExpenseTable 
+          expenses={filteredExpenses} 
+          onEdit={handleEditExpense}
+          loading={loading}
+          error={error}
+        />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
           <AccountantExpenseForm

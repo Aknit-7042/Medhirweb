@@ -1,6 +1,29 @@
 import React, { useState } from 'react';
-import { FiChevronDown, FiChevronUp, FiFileText } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp, FiFileText, FiEdit2, FiEye } from 'react-icons/fi';
 import Tooltip from './Tooltip';
+
+// Loading Skeleton Component
+const LoadingSkeleton = () => (
+  <div style={styles.tableContainer}>
+    <div style={{ padding: '20px' }}>
+      {[...Array(5)].map((_, i) => (
+        <div key={i} style={{
+          height: '60px',
+          background: '#f3f4f6',
+          marginBottom: '8px',
+          borderRadius: '8px',
+          animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        }} />
+      ))}
+    </div>
+    <style>{`
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .5; }
+      }
+    `}</style>
+  </div>
+);
 
 const statusColors = {
   Paid: { background: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' },
@@ -24,8 +47,8 @@ const styles = {
   th: {
     padding: '16px 24px',
     textAlign: 'left',
-    fontWeight: 600,
-    color: '#4b5563',
+    fontWeight: 700,
+    color: '#1f2937',
     borderBottom: '2px solid #e5e7eb',
     background: '#f9fafb',
     fontSize: '0.75rem',
@@ -40,11 +63,14 @@ const styles = {
     transition: 'background 0.2s',
     lineHeight: '1.5',
   },
+  zebraRow: {
+    background: '#fafafa',
+  },
   statusBadge: (status) => ({
     ...statusColors[status],
     borderRadius: '9999px',
     padding: '6px 14px',
-    fontWeight: 500,
+    fontWeight: 600,
     fontSize: '0.8rem',
     display: 'inline-block',
     whiteSpace: 'nowrap',
@@ -52,22 +78,56 @@ const styles = {
   proofLink: {
     color: '#2563eb',
     textDecoration: 'none',
-    fontWeight: 500,
+    fontWeight: 600,
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '6px'
+    gap: '6px',
+    transition: 'color 0.2s ease',
+    '&:hover': {
+      color: '#1d4ed8',
+    }
   },
   groupRow: {
     cursor: 'pointer',
     background: '#f8fafc',
-    fontWeight: 600,
+    fontWeight: 700,
+    color: '#1f2937',
+    '&:hover': {
+      background: '#eef2ff',
+    }
   },
   childRow: {
-      background: '#fff'
+    background: '#fff'
   },
   subTableContainer: {
     padding: '16px 24px',
     background: '#fff',
+  },
+  actionButton: {
+    background: 'none',
+    border: 'none',
+    padding: '6px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    color: '#6b7280',
+    transition: 'all 0.2s ease',
+    marginRight: '8px',
+    '&:hover': {
+      background: '#f3f4f6',
+      color: '#374151',
+    }
+  },
+  amountCell: {
+    fontWeight: 600,
+    color: '#1f2937',
+  },
+  projectIdCell: {
+    fontWeight: 600,
+    color: '#2563eb',
+  },
+  clientNameCell: {
+    fontWeight: 500,
+    color: '#374151',
   }
 };
 
@@ -96,9 +156,124 @@ const groupExpenses = (expenses) => {
   return groups;
 };
 
-const AccountantExpenseTable = ({ expenses, onEdit }) => {
+const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = null }) => {
   const [openGroups, setOpenGroups] = useState({});
   const [hoverRow, setHoverRow] = useState(null);
+  const [showColumnSettings, setShowColumnSettings] = useState(false);
+
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('accountantExpenseColumns');
+      return saved ? JSON.parse(saved) : {
+        projectId: true,
+        projectManager: true,
+        clientName: true,
+        totalExpense: true,
+        budget: true,
+        paymentCount: true,
+        date: true,
+        description: true,
+        category: true,
+        vendorName: true,
+        amount: true,
+        status: true,
+        paymentProof: true,
+      };
+    }
+    return {
+      projectId: true,
+      projectManager: true,
+      clientName: true,
+      totalExpense: true,
+      budget: true,
+      paymentCount: true,
+      date: true,
+      description: true,
+      category: true,
+      vendorName: true,
+      amount: true,
+      status: true,
+      paymentProof: true,
+    };
+  });
+
+  // Save column preferences
+  const saveColumnPreferences = (newColumns) => {
+    setVisibleColumns(newColumns);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('accountantExpenseColumns', JSON.stringify(newColumns));
+    }
+  };
+
+  // Toggle column visibility
+  const toggleColumn = (columnKey) => {
+    const newColumns = { ...visibleColumns, [columnKey]: !visibleColumns[columnKey] };
+    saveColumnPreferences(newColumns);
+  };
+
+  // Close column settings when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showColumnSettings && !event.target.closest('.column-settings')) {
+        setShowColumnSettings(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showColumnSettings]);
+
+  // Show loading skeleton if loading
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div style={styles.tableContainer}>
+        <div style={{ 
+          padding: '40px', 
+          textAlign: 'center', 
+          color: '#dc2626',
+          background: '#fef2f2',
+          borderRadius: '8px',
+          border: '1px solid #fecaca'
+        }}>
+          <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '8px' }}>
+            Error Loading Expenses
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#991b1b' }}>
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state if no expenses
+  if (!expenses || expenses.length === 0) {
+    return (
+      <div style={styles.tableContainer}>
+        <div style={{ 
+          padding: '40px', 
+          textAlign: 'center', 
+          color: '#6b7280',
+          background: '#f9fafb',
+          borderRadius: '8px',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '8px' }}>
+            No Expenses Found
+          </div>
+          <div style={{ fontSize: '0.9rem' }}>
+            Create your first expense to get started.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const processedExpenses = expenses.map(e => ({
     ...e,
@@ -115,7 +290,7 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
     { key: 'totalExpense', label: 'Total Expense', align: 'right' },
     { key: 'budget', label: 'Budget', align: 'right' },
     { key: 'paymentCount', label: 'No. of Payments', align: 'center' },
-  ];
+  ].filter(col => visibleColumns[col.key]);
 
   const detailColumns = [
     { key: 'date', label: 'Date' },
@@ -125,17 +300,21 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
     { key: 'amount', label: 'Amount', align: 'right' },
     { key: 'status', label: 'Status' },
     { key: 'paymentProof', label: 'Payment Proof' },
-  ];
+  ].filter(col => visibleColumns[col.key]);
 
   const renderSummaryCell = (group, colKey) => {
     switch(colKey) {
         case 'totalExpense':
         case 'budget':
-            return formatCurrency(group[colKey]);
+            return <span style={styles.amountCell}>{formatCurrency(group[colKey])}</span>;
         case 'paymentCount':
-            return group.payments.length;
+            return <span style={{ fontWeight: 600, color: '#6b7280' }}>{group.payments.length}</span>;
+        case 'projectId':
+            return <span style={styles.projectIdCell}>{group[colKey]}</span>;
+        case 'clientName':
+            return <span style={styles.clientNameCell}>{group[colKey]}</span>;
         default:
-            return group[colKey];
+            return <span style={{ fontWeight: 500 }}>{group[colKey]}</span>;
     }
   }
 
@@ -143,7 +322,7 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
     const value = exp[colKey];
     switch (colKey) {
         case 'amount': 
-            return formatCurrency(value);
+            return <span style={styles.amountCell}>{formatCurrency(value)}</span>;
         case 'status': 
             return (
                 <Tooltip text={exp.status === 'Rejected' ? exp.rejectionComment : ''}>
@@ -156,6 +335,21 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
                     <FiFileText /> View Proof
                 </a>
             ) : 'N/A';
+        case 'actions':
+            return (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Tooltip text="View Details">
+                        <button style={styles.actionButton} onClick={(e) => { e.stopPropagation(); onEdit(exp); }}>
+                            <FiEye size={16} />
+                        </button>
+                    </Tooltip>
+                    <Tooltip text="Edit Expense">
+                        <button style={styles.actionButton} onClick={(e) => { e.stopPropagation(); onEdit(exp); }}>
+                            <FiEdit2 size={16} />
+                        </button>
+                    </Tooltip>
+                </div>
+            );
         default: 
             return value;
     }
@@ -163,6 +357,74 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
 
   return (
     <div style={styles.tableContainer}>
+      {/* Column Settings */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '16px',
+        position: 'relative'
+      }}>
+        <button
+          onClick={() => setShowColumnSettings(!showColumnSettings)}
+          style={{
+            background: '#f3f4f6',
+            border: '1px solid #e5e7eb',
+            borderRadius: '6px',
+            padding: '8px 12px',
+            fontSize: '0.875rem',
+            color: '#374151',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          <span>Columns</span>
+          <FiChevronDown style={{ 
+            transform: showColumnSettings ? 'rotate(180deg)' : 'rotate(0deg)', 
+            transition: 'transform 0.2s' 
+          }} />
+        </button>
+        
+        {showColumnSettings && (
+          <div className="column-settings" style={{
+            position: 'absolute',
+            top: '100%',
+            right: 0,
+            background: '#fff',
+            border: '1px solid #e5e7eb',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            padding: '12px',
+            zIndex: 10,
+            minWidth: '200px'
+          }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>
+              Visible Columns
+            </div>
+            {Object.entries(visibleColumns).map(([key, visible]) => (
+              <label key={key} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '0.8rem',
+                color: '#6b7280',
+                cursor: 'pointer',
+                padding: '4px 0'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={visible}
+                  onChange={() => toggleColumn(key)}
+                  style={{ cursor: 'pointer' }}
+                />
+                {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
       <table style={styles.table}>
         <thead>
           <tr>
@@ -175,13 +437,17 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(groups).map(([groupKey, group]) => {
+          {Object.entries(groups).map(([groupKey, group], groupIndex) => {
             const isExpanded = openGroups[groupKey];
 
             return (
               <React.Fragment key={groupKey}>
                 <tr
-                  style={{ ...styles.groupRow, ...(hoverRow === groupKey && { background: '#eef2ff' }) }}
+                  style={{ 
+                    ...styles.groupRow, 
+                    ...(hoverRow === groupKey && { background: '#eef2ff' }),
+                    ...(groupIndex % 2 === 1 && styles.zebraRow)
+                  }}
                   onMouseEnter={() => setHoverRow(groupKey)}
                   onMouseLeave={() => setHoverRow(null)}
                   onClick={() => setOpenGroups(p => ({ ...p, [groupKey]: !isExpanded }))}
@@ -198,17 +464,33 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
                                 <table style={{ ...styles.table, border: 'none' }}>
                                     <thead>
                                         <tr>
-                                            {detailColumns.map(col => (
-                                                <th key={col.key} style={{ ...styles.th, background: '#eef2ff', borderBottom: '1px solid #c7d2fe' }}>{col.label}</th>
-                                            ))}
+                                            {detailColumns.map(col => 
+                                              <th key={col.key} style={{ ...styles.th, textAlign: col.align || 'left', fontSize: '0.7rem' }}>
+                                                {col.label}
+                                              </th>
+                                            )}
+                                            <th style={{ ...styles.th, width: '80px', fontSize: '0.7rem' }}>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {group.payments.map(exp => (
-                                            <tr key={exp.id} style={styles.childRow} onClick={() => onEdit(exp)}>
-                                                {detailColumns.map(col => (
-                                                    <td key={col.key} style={{...styles.td, textAlign: col.align || 'left'}}>{renderDetailCell(exp, col.key)}</td>
-                                                ))}
+                                        {group.payments.map((exp, expIndex) => (
+                                            <tr 
+                                                key={exp.id}
+                                                style={{ 
+                                                    ...(expIndex % 2 === 1 && styles.zebraRow),
+                                                    cursor: 'pointer',
+                                                    '&:hover': { background: '#f9fafb' }
+                                                }}
+                                                onClick={() => onEdit(exp)}
+                                            >
+                                                {detailColumns.map(col => 
+                                                  <td key={col.key} style={{...styles.td, textAlign: col.align || 'left', fontSize: '0.8rem'}}>
+                                                    {renderDetailCell(exp, col.key)}
+                                                  </td>
+                                                )}
+                                                <td style={styles.td}>
+                                                    {renderDetailCell(exp, 'actions')}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -220,13 +502,6 @@ const AccountantExpenseTable = ({ expenses, onEdit }) => {
               </React.Fragment>
             );
           })}
-          {expenses.length === 0 && (
-            <tr>
-              <td colSpan={summaryColumns.length + 1} style={{ textAlign: 'center', padding: '64px', color: '#6b7280' }}>
-                No expenses found.
-              </td>
-            </tr>
-          )}
         </tbody>
       </table>
     </div>
