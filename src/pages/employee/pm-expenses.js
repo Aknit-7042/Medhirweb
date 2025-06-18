@@ -2,11 +2,11 @@ import React, { useState, useMemo } from "react";
 import HradminNavbar from "../../components/HradminNavbar";
 import Sidebar from "../../components/Sidebar";
 import withAuth from "@/components/withAuth";
-import ExpenseTable from "@/components/PMExpenses/ExpenseTable";
 import Modal from "@/components/Modal";
 import CreateExpenseForm from "@/components/PMExpenses/CreateExpenseForm";
 import { FiSearch, FiFilter, FiChevronDown, FiX } from 'react-icons/fi';
 import { FaRegTrashAlt, FaPaperPlane } from 'react-icons/fa';
+import AccountantExpenseTable from "@/components/Accountant/ExpenseTable";
 
 const mockExpenses = [
     { id: "EXP-001", createdBy: "Test Name", projectId: "PROJ-001", clientName: "Client Alpha", date: "2023-10-10", description: "Server rack for new office", category: "Hardware", vendorName: "Premium Hardware Supplies", amount: "50000", status: "Paid", paymentProof: "/path/to/proof1.pdf", rejectionComment: "" },
@@ -117,7 +117,6 @@ const PMExpensesPage = () => {
 
   const [statusFilter, setStatusFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRows, setSelectedRows] = useState([]);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [advFilters, setAdvFilters] = useState({ dateFrom: '', dateTo: '', vendor: '' });
 
@@ -172,18 +171,6 @@ const PMExpensesPage = () => {
   }, [statusFilter, searchQuery, loggedInUser, advFilters]);
 
   const uniqueVendors = [...new Set(mockExpenses.map(e => e.vendorName))];
-
-  const handleBulkDelete = () => {
-    alert(`Deleting ${selectedRows.length} expenses.`);
-    // Add actual delete logic here
-    setSelectedRows([]);
-  }
-
-  const handleBulkMarkAsPaid = () => {
-    alert(`Marking ${selectedRows.length} expenses as Paid.`);
-    // Add actual update logic here
-    setSelectedRows([]);
-  }
 
   return (
     <>
@@ -246,22 +233,10 @@ const PMExpensesPage = () => {
             />
           </div>
         </div>
-
-        {selectedRows.length > 0 && (
-          <div style={{ ...styles.toolbar, justifyContent: 'flex-start' }}>
-            <div style={styles.bulkActionBar}>
-              <span style={{fontWeight: 600, color: '#4338ca'}}>{selectedRows.length} selected</span>
-              <button onClick={handleBulkMarkAsPaid} style={{...styles.advancedFilterButton, gap: 6}}><FaPaperPlane size={12}/> Mark as Paid</button>
-              <button onClick={handleBulkDelete} style={{...styles.advancedFilterButton, gap: 6}}><FaRegTrashAlt size={12}/> Delete</button>
-            </div>
-          </div>
-        )}
         
-        <ExpenseTable 
+        <AccountantExpenseTable 
           expenses={filteredExpenses} 
           onEdit={handleEditExpense}
-          selectedRows={selectedRows}
-          setSelectedRows={setSelectedRows}
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
