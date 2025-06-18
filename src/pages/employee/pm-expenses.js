@@ -237,6 +237,7 @@ const PMExpensesPage = () => {
         <AccountantExpenseTable 
           expenses={filteredExpenses} 
           onEdit={handleEditExpense}
+          preferencesKey="pmExpenseColumns"
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

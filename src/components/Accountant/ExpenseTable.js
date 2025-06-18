@@ -165,7 +165,7 @@ const groupExpenses = (expenses) => {
   return groups;
 };
 
-const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = null }) => {
+const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = null, preferencesKey = 'defaultExpenseColumns' }) => {
   const [openGroups, setOpenGroups] = useState({});
   const [hoverRow, setHoverRow] = useState(null);
   const [showColumnSettings, setShowColumnSettings] = useState(false);
@@ -173,7 +173,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
   // Column visibility state
   const [visibleColumns, setVisibleColumns] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('accountantExpenseColumns');
+      const saved = localStorage.getItem(preferencesKey);
       return saved ? JSON.parse(saved) : {
         projectId: true,
         clientName: true,
@@ -211,7 +211,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
   const saveColumnPreferences = (newColumns) => {
     setVisibleColumns(newColumns);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('accountantExpenseColumns', JSON.stringify(newColumns));
+      localStorage.setItem(preferencesKey, JSON.stringify(newColumns));
     }
   };
 

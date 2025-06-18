@@ -294,6 +294,7 @@ const AccountantExpensesPage = () => {
           onEdit={handleEditExpense}
           loading={loading}
           error={error}
+          preferencesKey="accountantExpenseColumns"
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
