@@ -167,7 +167,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
       const saved = localStorage.getItem('accountantExpenseColumns');
       return saved ? JSON.parse(saved) : {
         projectId: true,
-        projectManager: true,
         clientName: true,
         totalExpense: true,
         budget: true,
@@ -183,7 +182,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
     }
     return {
       projectId: true,
-      projectManager: true,
       clientName: true,
       totalExpense: true,
       budget: true,
@@ -285,7 +283,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
 
   const summaryColumns = [
     { key: 'projectId', label: 'Project ID' },
-    { key: 'projectManager', label: 'Project Manager' },
     { key: 'clientName', label: 'Client Name' },
     { key: 'totalExpense', label: 'Total Expense', align: 'right' },
     { key: 'budget', label: 'Budget', align: 'right' },
@@ -295,6 +292,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
   const detailColumns = [
     { key: 'date', label: 'Date' },
     { key: 'description', label: 'Description' },
+    { key: 'createdBy', label: 'Created by' },
     { key: 'category', label: 'Category' },
     { key: 'vendorName', label: 'Vendor Name' },
     { key: 'amount', label: 'Amount', align: 'right' },
@@ -335,21 +333,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
                     <FiFileText /> View Proof
                 </a>
             ) : 'N/A';
-        case 'actions':
-            return (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Tooltip text="View Details">
-                        <button style={styles.actionButton} onClick={(e) => { e.stopPropagation(); onEdit(exp); }}>
-                            <FiEye size={16} />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Edit Expense">
-                        <button style={styles.actionButton} onClick={(e) => { e.stopPropagation(); onEdit(exp); }}>
-                            <FiEdit2 size={16} />
-                        </button>
-                    </Tooltip>
-                </div>
-            );
         default: 
             return value;
     }
@@ -469,7 +452,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
                                                 {col.label}
                                               </th>
                                             )}
-                                            <th style={{ ...styles.th, width: '80px', fontSize: '0.7rem' }}>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -488,9 +470,6 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
                                                     {renderDetailCell(exp, col.key)}
                                                   </td>
                                                 )}
-                                                <td style={styles.td}>
-                                                    {renderDetailCell(exp, 'actions')}
-                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
