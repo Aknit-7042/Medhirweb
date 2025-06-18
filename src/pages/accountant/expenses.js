@@ -295,6 +295,7 @@ const AccountantExpensesPage = () => {
           loading={loading}
           error={error}
           preferencesKey="accountantExpenseColumns"
+          showProjectManager={true}
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

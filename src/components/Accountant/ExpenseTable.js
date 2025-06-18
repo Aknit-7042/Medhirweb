@@ -163,6 +163,7 @@ const groupExpenses = (expenses) => {
     if (!groups[groupKey]) {
         groups[groupKey] = {
             projectId: exp.projectId,
+            projectManager: exp.projectManager,
             clientName: exp.clientName,
             budget: exp.budget,
             totalExpense: 0,
@@ -180,7 +181,7 @@ const groupExpenses = (expenses) => {
   return groups;
 };
 
-const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = null, preferencesKey = 'defaultExpenseColumns' }) => {
+const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = null, preferencesKey = 'defaultExpenseColumns', showProjectManager = false }) => {
   const [openGroups, setOpenGroups] = useState({});
   const [hoverRow, setHoverRow] = useState(null);
   const [showColumnSettings, setShowColumnSettings] = useState(false);
@@ -189,6 +190,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const defaultColumns = {
       projectId: true,
+      projectManager: true,
       clientName: true,
       totalExpense: true,
       budget: true,
@@ -303,11 +305,15 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
   const summaryColumns = [
     { key: 'projectId', label: 'Project ID' },
     { key: 'clientName', label: 'Client Name' },
+    showProjectManager && { key: 'projectManager', label: 'Project Manager' },
     { key: 'totalExpense', label: 'Total Expense', align: 'right' },
     { key: 'budget', label: 'Budget', align: 'right' },
     { key: 'paymentCount', label: 'No. of Payments', align: 'center' },
     { key: 'expenseStatus', label: 'Expense Status' },
-  ].filter(col => visibleColumns[col.key]);
+  ].filter(Boolean).sort((a, b) => {
+    const order = ['projectId', 'clientName', 'projectManager', 'totalExpense', 'budget', 'paymentCount', 'expenseStatus'];
+    return order.indexOf(a.key) - order.indexOf(b.key);
+  }).filter(col => visibleColumns[col.key]);
 
   const detailColumns = [
     { key: 'date', label: 'Date' },
