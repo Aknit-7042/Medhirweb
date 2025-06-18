@@ -141,6 +141,21 @@ function getGroupStatus(payments) {
   return 'Paid';
 }
 
+function getGroupStatusSummary(payments) {
+  const total = payments.length;
+  const paidCount = payments.filter(p => p.status === 'Paid').length;
+  const rejectedCount = payments.filter(p => p.status === 'Rejected').length;
+
+  if (paidCount === total) {
+    return "All Paid";
+  }
+  if (rejectedCount === total) {
+    return "All Rejected";
+  }
+  const remainingCount = total - paidCount;
+  return `${remainingCount} Remaining`;
+}
+
 const groupExpenses = (expenses) => {
   const groups = {};
   expenses.forEach((exp) => {
@@ -152,7 +167,6 @@ const groupExpenses = (expenses) => {
             budget: exp.budget,
             totalExpense: 0,
             payments: [],
-            createdBy: exp.createdBy 
         };
     }
     groups[groupKey].totalExpense += parseFloat(exp.amount);
@@ -161,6 +175,7 @@ const groupExpenses = (expenses) => {
   Object.values(groups).forEach((group) => {
     group.payments.sort((a, b) => new Date(b.date) - new Date(a.date));
     group.expenseStatus = getGroupStatus(group.payments);
+    group.expenseStatusSummary = getGroupStatusSummary(group.payments);
   });
   return groups;
 };
@@ -324,7 +339,14 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
         case 'clientName':
             return <span style={styles.clientNameCell}>{group[colKey]}</span>;
         case 'expenseStatus':
-            return <span style={styles.statusBadge(group.expenseStatus)}>{group.expenseStatus}</span>;
+            return (
+              <div>
+                <span style={styles.statusBadge(group.expenseStatus)}>{group.expenseStatus}</span>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '4px' }}>
+                  {group.expenseStatusSummary}
+                </div>
+              </div>
+            );
         default:
             return <span style={{ fontWeight: 500 }}>{group[colKey]}</span>;
     }
