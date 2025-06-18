@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "name": "Component Naming Convention",
+      "pattern": "^[A-Z][a-zA-Z0-9]*\\.(jsx?)$",
+      "message": "React components should use PascalCase and .jsx or .js extension",
+      "severity": "warning"
+    },
+    {
+      "name": "Hook Naming Convention",
+      "pattern": "^use[A-Z][a-zA-Z0-9]*\\.(jsx?)$",
+      "message": "Custom hooks should start with 'use' and use PascalCase",
+      "severity": "warning"
+    },
+    {
+      "name": "Modal Component Naming",
+      "pattern": "^[A-Z][a-zA-Z0-9]*Modal\\.(jsx?)$",
+      "message": "Modal components should end with 'Modal'",
+      "severity": "info"
+    },
+    {
+      "name": "Layout Component Naming",
+      "pattern": "^[A-Z][a-zA-Z0-9]*Layout\\.(jsx?)$",
+      "message": "Layout components should end with 'Layout'",
+      "severity": "info"
+    },
+    {
+      "name": "Card Component Naming",
+      "pattern": "^[A-Z][a-zA-Z0-9]*Card\\.(jsx?)$",
+      "message": "Card components should end with 'Card'",
+      "severity": "info"
+    },
+    {
+      "name": "Form Component Naming",
+      "pattern": "^[A-Z][a-zA-Z0-9]*Form\\.(jsx?)$",
+      "message": "Form components should end with 'Form'",
+      "severity": "info"
+    },
+    {
+      "name": "Redux Slice Naming",
+      "pattern": "^[a-z][a-zA-Z0-9]*Slice\\.js$",
+      "message": "Redux slices should end with 'Slice.js'",
+      "severity": "warning"
+    },
+    {
+      "name": "Utility Function Naming",
+      "pattern": "^[a-z][a-zA-Z0-9]*\\.js$",
+      "message": "Utility functions should use camelCase",
+      "severity": "info"
+    },
+    {
+      "name": "Component Import Order",
+      "pattern": "import\\s+.*from\\s+['\"](react|next|@radix-ui|@tanstack|@reduxjs|axios|date-fns|react-hook-form|zod|framer-motion|react-icons|react-select|recharts|sonner|tailwind-merge|tailwindcss-animate).*['\"]",
+      "message": "Third-party imports should be grouped together",
+      "severity": "info"
+    },
+    {
+      "name": "Protected Route Pattern",
+      "pattern": "withAuth\\([A-Z][a-zA-Z0-9]*\\)",
+      "message": "Protected routes should use withAuth HOC",
+      "severity": "warning"
+    },
+    {
+      "name": "Form Validation Schema",
+      "pattern": "z\\.object\\(\\{[^}]*\\}\\)",
+      "message": "Form validation should use Zod schemas",
+      "severity": "info"
+    },
+    {
+      "name": "React Query Hook Pattern",
+      "pattern": "useQuery\\(['\"][A-Z][a-zA-Z0-9]*['\"]",
+      "message": "React Query hooks should use PascalCase for query keys",
+      "severity": "info"
+    },
+    {
+      "name": "Redux Action Pattern",
+      "pattern": "createSlice\\(\\{[^}]*reducers:\\{[^}]*\\}[^}]*\\}\\)",
+      "message": "Redux slices should use createSlice from @reduxjs/toolkit",
+      "severity": "warning"
+    },
+    {
+      "name": "Tailwind Class Pattern",
+      "pattern": "className=\\{[^}]*tw-merge\\([^}]*\\)[^}]*\\}",
+      "message": "Use tw-merge for conditional Tailwind classes",
+      "severity": "info"
+    },
+    {
+      "name": "Component Props Type",
+      "pattern": "PropTypes\\.(shape|exact)\\(\\{[^}]*\\}\\)",
+      "message": "Use PropTypes for component prop validation",
+      "severity": "info"
+    },
+    {
+      "name": "API Call Pattern",
+      "pattern": "axios\\.(get|post|put|delete|patch)\\(['\"][A-Z][a-zA-Z0-9]*['\"]",
+      "message": "API endpoints should use PascalCase",
+      "severity": "info"
+    },
+    {
+      "name": "Date Handling Pattern",
+      "pattern": "date-fns\\.[a-z]+\\(",
+      "message": "Use date-fns for date manipulation",
+      "severity": "info"
+    },
+    {
+      "name": "Toast Notification Pattern",
+      "pattern": "toast\\.(success|error|info|warning)\\(",
+      "message": "Use toast notifications for user feedback",
+      "severity": "info"
+    },
+    {
+      "name": "Animation Pattern",
+      "pattern": "framer-motion",
+      "message": "Use framer-motion for animations",
+      "severity": "info"
+    },
+    {
+      "name": "Icon Import Pattern",
+      "pattern": "from\\s+['\"]lucide-react['\"]",
+      "message": "Use lucide-react for icons",
+      "severity": "info"
+    }
+  ]
+} 

@@ -24,7 +24,7 @@ import {
 import Link from "next/link";
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
-  const [currentRole, setCurrentRole] = useState("");
+  const [currentRole, setCurrentRole] = useState("ACCOUNTANT");
   const [expandedMenus, setExpandedMenus] = useState({});
   const [department, setDepartment] = useState("");
   const router = useRouter();
@@ -151,8 +151,14 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     {
       label: "Expenses",
       icon: <ReceiptIcon />,
-      link: "/employee/expenses",
+      link: "/employee/pm-expenses",
       roles: ["EMPLOYEE"],
+    },
+    {
+      label: "Accountant Expenses",
+      icon: <ReceiptIcon />,
+      link: "/accountant/expenses",
+      roles: ["ACCOUNTANT"],
     },
     {
       label: "Income",
@@ -178,7 +184,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
       link: "/employee/leads",
       roles: ["EMPLOYEE"],
     },
-  
   ];
 
   // Filter menu items based on currentRole and department

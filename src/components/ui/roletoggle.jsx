@@ -7,6 +7,7 @@ const roleLabels = {
   EMPLOYEE: "Employee",
   MANAGER: "Manager",
   HRADMIN: "HR Admin",
+  ACCOUNTANT: "Accountant",
   SALES: "Sales Employee"
 };
 
@@ -14,11 +15,12 @@ const roleColors = {
   HRADMIN: "bg-blue-500 text-white",
   MANAGER: "bg-green-500 text-white",
   EMPLOYEE: "bg-purple-500 text-white",
+  ACCOUNTANT: "bg-indigo-600 text-white",
   SALES: "bg-yellow-500 text-white"
 };
 
 // Define the desired order of roles
-const roleOrder = ["EMPLOYEE", "MANAGER", "HRADMIN"];
+const roleOrder = ["EMPLOYEE", "MANAGER", "HRADMIN", "ACCOUNTANT"];
 
 const RoleToggle = () => {
   const router = useRouter();
@@ -30,7 +32,10 @@ const RoleToggle = () => {
     const roles = JSON.parse(sessionStorage.getItem("roles") || "[]");
     const department = sessionStorage.getItem("departmentName");
     
-    if (roles.length > 0) {
+    // Always include ACCOUNTANT role for testing
+    const allRoles = [...new Set([...roles, "ACCOUNTANT"])];
+    
+    if (allRoles.length > 0) {
       // Update role labels if department is Sales
       if (department === "Sales") {
         setRoleDisplayLabels({
@@ -40,11 +45,11 @@ const RoleToggle = () => {
       }
       
       // Sort roles according to the defined order
-      const sortedRoles = roleOrder.filter(role => roles.includes(role));
+      const sortedRoles = roleOrder.filter(role => allRoles.includes(role));
       setAvailableRoles(sortedRoles);
       
       const storedRole = sessionStorage.getItem("currentRole");
-      if (storedRole && roles.includes(storedRole)) {
+      if (storedRole && allRoles.includes(storedRole)) {
         setCurrentRole(storedRole);
       } else {
         setCurrentRole(sortedRoles[0]);
@@ -62,6 +67,8 @@ const RoleToggle = () => {
         router.push("/manager/dashboard");
       } else if (role === "EMPLOYEE") {
         router.push("/employee/dashboard");
+      } else if (role === "ACCOUNTANT") {
+        router.push("/accountant/expenses");
       }
     }
   };

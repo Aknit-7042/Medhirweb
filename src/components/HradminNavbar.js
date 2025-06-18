@@ -217,6 +217,13 @@ const Navbar = () => {
     }
   };
 
+  const handleRoleSwitch = (role) => {
+    sessionStorage.setItem("currentRole", role);
+    if (role === "EMPLOYEE") router.push("/employee/pm-expenses");
+    else if (role === "HRADMIN") router.push("/hradmin/dashboard");
+    else if (role === "ACCOUNTANT") router.push("/accountant/expenses");
+  };
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 ${navbarColor}`}>
       <nav className="flex justify-between items-center p-3 shadow-md w-full">
