@@ -135,6 +135,12 @@ const getExpenseId = (id) => `EXP-${id.slice(-4)}`;
 
 const formatCurrency = (amount) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(amount)}`;
 
+function getGroupStatus(payments) {
+  if (payments.some(p => p.status === 'Rejected')) return 'Rejected';
+  if (payments.some(p => p.status === 'Pending')) return 'Pending';
+  return 'Paid';
+}
+
 const groupExpenses = (expenses) => {
   const groups = {};
   expenses.forEach((exp) => {
@@ -152,7 +158,10 @@ const groupExpenses = (expenses) => {
     groups[groupKey].totalExpense += parseFloat(exp.amount);
     groups[groupKey].payments.push(exp);
   });
-  Object.values(groups).forEach((group) => group.payments.sort((a, b) => new Date(b.date) - new Date(a.date)));
+  Object.values(groups).forEach((group) => {
+    group.payments.sort((a, b) => new Date(b.date) - new Date(a.date));
+    group.expenseStatus = getGroupStatus(group.payments);
+  });
   return groups;
 };
 
@@ -178,6 +187,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
         amount: true,
         status: true,
         paymentProof: true,
+        expenseStatus: true,
       };
     }
     return {
@@ -193,6 +203,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
       amount: true,
       status: true,
       paymentProof: true,
+      expenseStatus: true,
     };
   });
 
@@ -287,6 +298,7 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
     { key: 'totalExpense', label: 'Total Expense', align: 'right' },
     { key: 'budget', label: 'Budget', align: 'right' },
     { key: 'paymentCount', label: 'No. of Payments', align: 'center' },
+    { key: 'expenseStatus', label: 'Expense Status' },
   ].filter(col => visibleColumns[col.key]);
 
   const detailColumns = [
@@ -311,6 +323,8 @@ const AccountantExpenseTable = ({ expenses, onEdit, loading = false, error = nul
             return <span style={styles.projectIdCell}>{group[colKey]}</span>;
         case 'clientName':
             return <span style={styles.clientNameCell}>{group[colKey]}</span>;
+        case 'expenseStatus':
+            return <span style={styles.statusBadge(group.expenseStatus)}>{group.expenseStatus}</span>;
         default:
             return <span style={{ fontWeight: 500 }}>{group[colKey]}</span>;
     }
