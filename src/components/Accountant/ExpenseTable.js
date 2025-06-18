@@ -148,11 +148,11 @@ const groupExpenses = (expenses) => {
     if (!groups[groupKey]) {
         groups[groupKey] = {
             projectId: exp.projectId,
-            projectManager: exp.projectManager,
             clientName: exp.clientName,
             budget: exp.budget,
             totalExpense: 0,
             payments: [],
+            createdBy: exp.createdBy 
         };
     }
     groups[groupKey].totalExpense += parseFloat(exp.amount);
