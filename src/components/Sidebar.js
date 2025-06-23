@@ -1,46 +1,9 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import {
-  FaUsers,
-  FaMoneyCheckAlt,
-  FaCog,
-  FaBuilding,
-  FaCalendarAlt,
-  FaAngleLeft,
-  FaAngleRight,
-  FaTasks,
-} from "react-icons/fa";
-import {
-  Briefcase,
-  Calendar,
-  ChartColumnIncreasing,
-  Clock,
-  CreditCard,
-  CreditCardIcon,
-  ReceiptIcon,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { useState } from "react";
+import { FaAngleLeft, FaAngleRight, FaUsers, FaBuilding, FaUserTie } from "react-icons/fa";
 import Link from "next/link";
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
-  const [currentRole, setCurrentRole] = useState("ACCOUNTANT");
   const [expandedMenus, setExpandedMenus] = useState({});
-  const [department, setDepartment] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    const role = sessionStorage.getItem("currentRole");
-    const dept = sessionStorage.getItem("departmentName");
-    setCurrentRole(role);
-    setDepartment(dept);
-
-    // Initialize Settings menu as expanded
-    setExpandedMenus((prev) => ({
-      ...prev,
-      settings: true,
-    }));
-  }, []);
 
   const toggleMenu = (menuKey) => {
     setExpandedMenus((prev) => ({
@@ -49,154 +12,29 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     }));
   };
 
-  // Define menu items based on the role
+  // Define menu items
   const menuItems = [
     {
-      label: "Dashboard",
-      icon: <ChartColumnIncreasing />,
-      link: "/hradmin/dashboard",
-      roles: ["HRADMIN"],
+      label: "Customers",
+      icon: <FaUsers />,
+      link: "/Finance/Customer/customers",
     },
     {
-      label: "Employees",
-      icon: <Users />,
-      link: "/hradmin/employees",
-      roles: ["HRADMIN"],
+      label: "Vendor",
+      icon: <FaBuilding />,
+      link: "/Finance/Vendor/vendor",
     },
     {
-      label: "Attendance",
-      icon: <Clock />,
-      link: "/hradmin/attendance",
-      roles: ["HRADMIN"],
-    },
-    {
-      label: "Payroll",
-      icon: <ReceiptIcon />,
-      link: "/hradmin/payroll",
-      roles: ["HRADMIN"],
-    },
-    {
-      label: "Settings",
-      icon: <FaCog />,
-      roles: ["HRADMIN"],
-      hasSubmenu: true,
-      menuKey: "settings",
-      subItems: [
-        {
-          label: "Organization",
-          icon: <FaBuilding />,
-          link: "/hradmin/settings/organization",
-        },
-        {
-          label: "Payroll",
-          icon: <FaMoneyCheckAlt />,
-          link: "/hradmin/settings/payrollsettings",
-        },
-        {
-          label: "Leaves",
-          icon: <FaCalendarAlt />,
-          link: "/hradmin/settings/leave",
-        },
-        {
-          label: "Admin Access",
-          icon: <FaUsers />,
-          link: "/hradmin/settings/admin-access",
-        }
-      ],
-    },
-
-    {
-      label: "Dashboard",
-      icon: <ChartColumnIncreasing />,
-      link: "/manager/dashboard",
-      roles: ["MANAGER"],
-    },
-    {
-      label: "Team",
-      icon: <Briefcase />,
-      link: "/manager/team",
-      roles: ["MANAGER"],
-    },
-    {
-      label: "Attendance",
-      icon: <Clock />,
-      link: "/manager/attendance",
-      roles: ["MANAGER"],
-    },
-    {
-      label: "Lead Management",
-      icon: <FaTasks />,
-      link: "/manager/leads",
-      roles: ["MANAGER"],
-    },
-
-    {
-      label: "Dashboard",
-      icon: <ChartColumnIncreasing />,
-      link: "/employee/dashboard",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      label: "Leave",
-      icon: <Calendar />,
-      link: "/employee/leaves",
-      roles: ["EMPLOYEE"],
-    },
-    // {
-    //   label: "Reimbursement",
-    //   icon: <CreditCard />,
-    //   link: "/employee/reimbursement",
-    //   roles: ["EMPLOYEE"],
-    // },
-    {
-      label: "Expenses",
-      icon: <ReceiptIcon />,
-      link: "/employee/pm-expenses",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      label: "Accountant Expenses",
-      icon: <ReceiptIcon />,
-      link: "/accountant/expenses",
-      roles: ["ACCOUNTANT"],
-    },
-    {
-      label: "Income",
-      icon: <Wallet />,
-      link: "/employee/income",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      label: "Attendance",
-      icon: <Clock />,
-      link: "/employee/attendances",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      label: "My Payslips",
-      icon: <ReceiptIcon />,
-      link: "/employee/mypayslip",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      label: "Lead Management",
-      icon: <FaTasks />,
-      link: "/employee/leads",
-      roles: ["EMPLOYEE"],
+      label: "Employee",
+      icon: <FaUserTie />,
+      link: "/Finance/Employees/employee",
     },
   ];
 
-  // Filter menu items based on currentRole and department
-  const filteredMenu = menuItems.filter((item) => {
-    if (item.label === "Lead Management") {
-      return item.roles.includes(currentRole) && department === "Sales";
-    }
-    return item.roles.includes(currentRole);
-  });
-
   const isActiveLink = (link) => {
     if (!link) return false;
-    return router.pathname === link || router.pathname.startsWith(link);
+    // You can add router logic here if needed
+    return false;
   };
 
   const isActiveParent = (item) => {
@@ -235,7 +73,12 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
 
       <nav className="flex-1 pt-4">
         <ul className="space-y-2">
-          {filteredMenu.map((item, index) => {
+          {menuItems.length === 0 && (
+            <li className="px-4 py-3 text-gray-400 text-sm">
+              No modules yet. Add your new module links here.
+            </li>
+          )}
+          {menuItems.map((item, index) => {
             const isActive = isActiveLink(item.link);
             const isParentActive = isActiveParent(item);
             const isExpanded = item.menuKey

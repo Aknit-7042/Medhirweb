@@ -1,69 +1,34 @@
-# Improving Your Dashboard UI Font Size and Readability
-
-If you find the current font size and style of your Accountant Expense Panel UI unsatisfactory, here are expert recommendations for enhancing font choices, sizing, and overall table readability.
-
----
-
-## Recommended Font Sizes for Dashboard UI
-
-- **Body Text:** Use a minimum of 14px to 16px for main table content and general UI elements. This range is widely accepted for dashboards, balancing readability and information density[1][2].
-- **Headers:** Make headers stand out by using 18px to 24px, depending on the importance and hierarchy. Larger headers help users quickly identify sections and columns[3][4].
-- **Captions/Secondary Text:** Use 12px to 14px for less critical information, such as captions or footnotes, ensuring they remain readable but do not overpower main content[4].
-
----
-
-## Best Fonts for Dashboard UI
-
-- **Modern Sans-Serif Fonts:** Fonts like Roboto, Source Sans Pro, Inter, Poppins, and DM Sans are highly recommended for dashboards due to their clean appearance and excellent legibility at smaller sizes[5][6].
-- **Font Pairing:** Use a bold or semi-bold weight for headers and regular weight for body text to create a clear visual hierarchy[5].
-- **International Support:** Choose fonts that support multiple languages and have good x-height for clarity at smaller sizes[5][6].
-
----
-
-## Table Readability and Visual Hierarchy
-
-- **Bold Headers:** Use bold and slightly larger font sizes for table headers to make them distinct[7].
-- **Row Striping:** Apply alternating background colors (“zebra stripes”) to table rows for easier scanning[7].
-- **Alignment:** Left-align text columns and right-align numeric columns for better readability and comparison[8].
-- **Spacing:** Increase row height and cell padding to give content more breathing room, making the table less cluttered[7][8].
-- **Contrast:** Ensure high contrast between text and background for accessibility and ease of reading[7].
-
----
-
-## Additional Typography Tips
-
-- **Line Height:** Set line height to 120%–150% of the font size for optimal readability (e.g., 16px font size = 19–24px line height)[4].
-- **Responsive Sizing:** Ensure font sizes and table layouts adapt well to different screen sizes for consistent usability[3].
-- **Minimalist Design:** Avoid excessive borders or background fills; rely on white space, alignment, and grouping for a clean look[8].
-
----
-
-## Sample Font Sizing Table
-
-| Element                  | Recommended Font Size |
-|--------------------------|----------------------|
-| Table Header             | 18–24px[3][4]        |
-| Table Body/Text          | 14–16px[1][2]        |
-| Captions/Secondary Text  | 12–14px[4]           |
-
----
-
-## Summary
-
-- Use at least 14px–16px for main content, 18px+ for headers, and modern sans-serif fonts like Roboto or Source Sans Pro for clarity[1][5][6].
-- Enhance readability with bold headers, proper alignment, row striping, and increased spacing[7][8].
-- Maintain high contrast and responsive sizing for accessibility[3][7].
-
-Implementing these changes will make your dashboard UI more visually appealing, readable, and user-friendly.
-
-[1] https://ux.stackexchange.com/questions/144614/what-is-the-ideal-font-size-to-be-used-in-dashboard
-[2] https://www.reddit.com/r/UXDesign/comments/1bxho5b/accessible_typeface_sizing_in_a_ui_what_are_you/
-[3] https://learnui.design/blog/mobile-desktop-website-font-size-guidelines.html
-[4] https://www.wix.com/wixel/resources/font-size
-[5] https://webflow.com/blog/fonts-for-web-design
-[6] https://www.thedesignership.com/blog/best-free-fonts-for-ui-design
-[7] https://www.uxpin.com/studio/blog/table-ux/
-[8] https://www.mindtwo.com/blog/web-typography-11-tips-for-readable-tables
-[9] https://pplx-res.cloudinary.com/image/private/user_uploads/70052544/2d619f3e-f41c-4666-8b03-7fd7349ecfde/Screenshot-2025-06-18-at-12.42.48-AM.jpg
-[10] https://imperavi.com/books/ui-typography/basis/body-text/
-[11] https://stephaniewalter.design/blog/what-minimum-font-size-for-a-high-density-data-web-app-do-you-suggest/
++---------------------------------------------------------------+
+| Lead Name                ★★★★☆    [Status: New]  [Won][Lost] |
++---------------------------------------------------------------+
+| Contact Info      | Project Details        | Source & Status         |
+|-------------------|-----------------------|------------------------|
+| Name:             | Project Type:         | Source:                |
+| Email:            | Property Type:        | Status:                |
+| Phone:            | Location:             |                        |
+|                   | Budget:               |                        |
+|                   | Assigned To: [Avatar Name]                   |
++---------------------------------------------------------------+
+| Notes:                                                      |
+| ----------------------------------------------------------- |
+| [Multi-line notes area]                                     |
++---------------------------------------------------------------+
+| [Log Note]   [Activity]                                     |
++---------------------------------------------------------------+
+| When "Log Note" is clicked:                                 |
+| ----------------------------------------------------------- |
+|  [User Avatar]  Log an internal note...       [Attachment]  |
+|  ---------------------------------------------------------  |
+|  [Log]                                                      |
+|                                                             |
+| ------------------- Planned Activities -------------------  |
+|  Due in X days: "To-Do" for [User]                          |
+|  ✓ Mark Done   ✎ Edit   ✗ Cancel                            |
+|                                                             |
+| ------------------------- Timeline -----------------------  |
+|  [User] [Time]                                               |
+|  Stage changed: Proposition → Qualified                      |
+|  [User] [Time]                                               |
+|  Stage changed: New → Proposition                            |
++---------------------------------------------------------------+
+      

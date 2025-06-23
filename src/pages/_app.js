@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import { store } from "../redux/store";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ChakraProvider } from '@chakra-ui/react';
+import system from '../theme';
 import {
   updateSessionActivity,
   isSessionExpiredDueToInactivity,
@@ -45,10 +47,12 @@ function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <Toaster />
+        <ChakraProvider value={system}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <Toaster />
+        </ChakraProvider>
       </QueryClientProvider>
     </Provider>
   );
